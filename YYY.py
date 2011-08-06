@@ -108,6 +108,10 @@ def parse(program):
 
     return "".join(parsed), bracket_map
 
+def YYYtoBF(program):
+    """change YYY code to brainfuck code"""
+    pass
+
 def run(fp):
     program_contents = ""
     while True:
