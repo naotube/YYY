@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 YYY, the myon-myon programming language interpreter.
 derived from PyPy tutorial by Andrew Brown example5.py
@@ -108,6 +109,14 @@ def parse(program):
 
     return "".join(parsed), bracket_map
 
+def parseYYY(program):
+    """remove characters except u'妖' u'々' u'夢'"""
+    parsed = []
+    for c in program.decode('utf-8'):
+        if c in (u'妖', u'々', u'夢'):
+            parsed.append(c)
+    return "".join(parsed)
+
 def YYYtoBF(program):
     """change YYY code to brainfuck code"""
     pass
@@ -120,7 +129,8 @@ def run(fp):
             break
         program_contents += read
     os.close(fp)
-    program, bm = parse(program_contents)
+    YYYprogram = YYYtoBF(parseYYY(program_contents))
+    program, bm = parse(YYYprogram)
     mainloop(program, bm)
 
 def entry_point(argv):
