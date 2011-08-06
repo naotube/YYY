@@ -2,7 +2,7 @@
 import YYY
 import unittest
 
-class YYYtoBFTestCase(unittest.TestCase):
+class YYYtoBFGoodInput(unittest.TestCase):
     def testIncrement(self):
         """increment where the pointer is, when the input is '妖々夢妖夢'"""
         program = u"妖々夢妖夢".encode('utf-8')
@@ -42,20 +42,6 @@ class YYYtoBFTestCase(unittest.TestCase):
         """increment where the pointer is, when the input is '妖々夢妖夢'"""
         program = u"妖妖夢妖々夢".encode('utf-8')
         self.assertEqual(YYY.YYYtoBF(program), ']')
-
-class ParseYYYTestCase(unittest.TestCase):
-    known_cases = (
-            (u"妖々夢妖夢".encode('utf-8'), u"妖々夢妖夢"),
-            (u"橙々ミニ東方".encode('utf-8'), u"々"),
-            (u"妖々.夢".encode('utf-8'), u"妖々夢"),
-            (u"12妖々夢34".encode('utf-8'), u"妖々夢"),
-            (u"妖々夢の妖夢".encode('utf-8'), u"妖々夢妖夢")
-            )
-    def testFiltering(self):
-        """parseYYY removes characters except u'妖', u'々', u'夢'"""
-        for program, parsed in self.known_cases:
-            result = YYY.parseYYY(program)
-            self.assertEqual(result, parsed)
 
 if __name__ == "__main__":
     unittest.main()

@@ -7,6 +7,9 @@ derived from PyPy tutorial by Andrew Brown example5.py
 import os
 import sys
 
+class ParseError(SyntaxError):
+    pass
+
 try:
     from pypy.rlib.jit import JitDriver, purefunction
 except ImportError:
@@ -109,17 +112,46 @@ def parse(program):
 
     return "".join(parsed), bracket_map
 
-def parseYYY(program):
-    """remove characters except u'妖' u'々' u'夢'"""
-    parsed = []
-    for c in program.decode('utf-8'):
-        if c in (u'妖', u'々', u'夢'):
-            parsed.append(c)
-    return "".join(parsed)
-
 def YYYtoBF(program):
     """change YYY code to brainfuck code"""
-    pass
+    bf = ""
+    pattern = ""
+    Y = 0
+    for c in program.decode('utf-8'):
+        if Y == 0 and c == u'妖':
+            Y = 1
+            pattern += c
+        elif Y > 0 and c == u'夢':
+            Y = 0
+            pattern += c
+        elif Y == 1:
+            if c in (u'妖', u'々'):
+                Y = 2
+                pattern += c
+        if len(pattern) >= 4 and pattern[-1] == u'夢':
+            print(pattern)
+            if pattern == u'妖々夢妖夢':
+                bf += '+'
+            elif pattern == u'妖夢妖々夢':
+                bf += '-'
+            elif pattern == u'妖夢妖夢':
+                bf += '>'
+            elif pattern == u'妖々夢妖々夢':
+                bf += '<'
+            elif pattern == u'妖夢妖妖夢':
+                bf += ','
+            elif pattern == u'妖妖夢妖夢':
+                bf += '.'
+            elif pattern == u'妖々夢妖妖夢':
+                bf += '['
+            elif pattern == u'妖妖夢妖々夢':
+                bf += ']'
+            else:
+                raise ParseError(pattern)
+            pattern = []
+            Y = 0
+
+    return bf
 
 def run(fp):
     program_contents = ""
@@ -129,7 +161,7 @@ def run(fp):
             break
         program_contents += read
     os.close(fp)
-    YYYprogram = YYYtoBF(parseYYY(program_contents))
+    YYYprogram = YYYtoBF(program_contents)
     program, bm = parse(YYYprogram)
     mainloop(program, bm)
 
