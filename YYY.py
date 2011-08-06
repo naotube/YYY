@@ -115,7 +115,7 @@ def parse(program):
 def YYYtoBF(program):
     """change YYY code to brainfuck code"""
     bf = ""
-    pattern = ""
+    pattern = "".encode('utf-8')
     Y = 0
     for c in program.decode('utf-8'):
         if Y == 0 and c == u'妖':
@@ -132,6 +132,7 @@ def YYYtoBF(program):
             Y = 1
             pattern = u'妖妖夢妖'
         if len(pattern) >= 4 and pattern[-1] == u'夢':
+            pattern = "".join(pattern)
             if pattern == u'妖々夢妖夢':
                 bf += '+'
             elif pattern == u'妖夢妖々夢':
