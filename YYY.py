@@ -128,8 +128,10 @@ def YYYtoBF(program):
             if c in (u'妖', u'々'):
                 Y = 2
                 pattern += c
+        if pattern == u'妖妖夢妖妖':
+            Y = 1
+            pattern = u'妖妖夢妖'
         if len(pattern) >= 4 and pattern[-1] == u'夢':
-            print(pattern)
             if pattern == u'妖々夢妖夢':
                 bf += '+'
             elif pattern == u'妖夢妖々夢':
