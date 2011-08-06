@@ -1,33 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 YYY, the myon-myon programming language interpreter.
-derived from PyPy tutorial by Andrew Brown example5.py
+derived from examples of PyPy tutorial by Andrew Brown
 """
 
 import os
 import sys
+import codecs
 
 class ParseError(SyntaxError):
     pass
 
-try:
-    from pypy.rlib.jit import JitDriver, purefunction
-except ImportError:
-    class JitDriver(object):
-        def __init__(self,**kw): pass
-        def jit_merge_point(self,**kw): pass
-        def can_enter_jit(self,**kw): pass
-    def purefunction(f): return f
-
-def get_location(pc, program, bracket_map):
-    return "%s_%s_%s" % (
-            program[:pc], program[pc], program[pc+1:]
-            )
-
-jitdriver = JitDriver(greens=['pc', 'program', 'bracket_map'], reds=['tape'],
-        get_printable_location=get_location)
-
-@purefunction
 def get_matching_bracket(bracket_map, pc):
     return bracket_map[pc]
 
@@ -36,9 +19,6 @@ def mainloop(program, bracket_map):
     tape = Tape()
 
     while pc < len(program):
-        jitdriver.jit_merge_point(pc=pc, tape=tape, program=program,
-                bracket_map=bracket_map)
-
         code = program[pc]
 
         if code == ">":
@@ -115,9 +95,9 @@ def parse(program):
 def YYYtoBF(program):
     """change YYY code to brainfuck code"""
     bf = ""
-    pattern = "".encode('utf-8')
+    pattern = ""
     Y = 0
-    for c in program.decode('utf-8'):
+    for c in program:
         if Y == 0 and c == u'妖':
             Y = 1
             pattern += c
@@ -156,34 +136,19 @@ def YYYtoBF(program):
 
     return bf
 
-def run(fp):
-    program_contents = ""
-    while True:
-        read = os.read(fp, 4096)
-        if len(read) == 0:
-            break
-        program_contents += read
-    os.close(fp)
-    YYYprogram = YYYtoBF(program_contents)
-    program, bm = parse(YYYprogram)
-    mainloop(program, bm)
-
-def entry_point(argv):
+def run(argv):
     try:
         filename = argv[1]
     except IndexError:
         print "You must supply a filename"
         return 1
 
-    run(os.open(filename, os.O_RDONLY, 0777))
-    return 0
+    program_file = codecs.open(filename, 'r', 'utf-8')
+    program_contents = program_file.read()
 
-def target(*args):
-    return entry_point, None
-
-def jitpolicy(driver):
-    from pypy.jit.codewriter.policy import JitPolicy
-    return JitPolicy()
+    YYYprogram = YYYtoBF(program_contents)
+    program, bm = parse(YYYprogram)
+    mainloop(program, bm)
 
 if __name__ == "__main__":
-    entry_point(sys.argv)
+    run(sys.argv)
