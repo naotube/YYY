@@ -21,6 +21,6 @@ Almost same as brainf*ck. All characters that don't match the syntax are ignored
 - 妖妖夢妖夢
    Output the byte at the pointer.
 - 妖々夢妖妖夢
-   Jump forward past the matching ] if the byte at the pointer is zero.
+   Jump forward past the matching 妖妖夢妖々夢 if the byte at the pointer is zero.
 - 妖妖夢妖々夢
-   Jump backward to the matching [ unless the byte at the pointer is zero.
+   Jump backward to the matching 妖々夢妖妖夢 unless the byte at the pointer is zero.
