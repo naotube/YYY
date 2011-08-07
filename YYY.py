@@ -2,6 +2,7 @@
 """
 YYY, the myon-myon programming language interpreter.
 derived from examples of PyPy tutorial by Andrew Brown
+https://bitbucket.org/brownan/pypy-tutorial/
 """
 
 import os
